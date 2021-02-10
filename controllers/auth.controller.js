@@ -5,7 +5,8 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/users.model');
 
 // utilities
-const { generateJWT } = require('../utilities/jwt.helper')
+const { generateJWT } = require('../utilities/jwt.helper');
+const { googleVerify } = require('../utilities/google-verify.util');
 
 /**
  * User Login
@@ -49,6 +50,51 @@ const doLogin = async (req, res = response) => {
     }
 }
 
+const googleSignIn = async (req, res) => {
+    const googleToken = req.body.token;
+    try {
+        const { name, email, picture } = await googleVerify(googleToken);
+
+        // check previously register for user
+        const userDB = await User.findOne({ email });
+        let user;
+
+        if (!userDB) {
+            user = new User({
+                name,
+                email,
+                password: '1234567890',
+                image: picture,
+                google: true
+            });
+        } else {
+            // check previously register for user
+            user = userDB;
+            user.google = true;
+            user.password = '1234567890';
+        }
+
+        await user.save();
+
+        // JWT
+        const token = await generateJWT(user.id);
+
+        res.status(200).json({
+            success: true,
+            token
+        });
+    } catch (e) {
+        res.status(401).json({
+            success: false,
+            message: 'Token not valid'
+        });
+    }
+
+
+}
+
+
 module.exports = {
-    doLogin
+    doLogin,
+    googleSignIn
 };
