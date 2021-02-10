@@ -18,9 +18,16 @@ app.use(express.json());
 
 dbConnection();
 
-// routes example
+// Routes
 app.use('/api/v1/users', require('./routes/users.route'));
 app.use('/api/v1/login', require('./routes/auth.route'));
+app.use('/api/v1/hospitals', require('./routes/hospitals.route'));
+app.use('/api/v1/medics', require('./routes/medics.route'));
+app.use('/api/v1/search', require('./routes/searchs.route'));
+app.use('/api/v1/uploads', require('./routes/upload.route'));
 
+/*var serveIndex = require('serve-index');
+app.use(express.static(__dirname + '/'))
+app.use('/uploads', serveIndex(__dirname + '/uploads'));*/
 
 app.listen(portDB, () => console.log(`Server listening on port ${ portDB }`));

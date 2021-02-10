@@ -4,8 +4,8 @@ const bcrypt = require('bcryptjs');
 // models
 const User = require('../models/users.model');
 
-// helpers
-const { generateJWT } = require('../helpers/jwt.helper')
+// utilities
+const { generateJWT } = require('../utilities/jwt.helper')
 
 /**
  * User Login
