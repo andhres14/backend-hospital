@@ -26,6 +26,9 @@ router.post('/', [
 
 router.put('/:id', [
     checkJWT,
+    check('name', 'Name is required').not().isEmpty(),
+    check('hospital', 'Hospital is required').not().isEmpty(),
+    check('hospital', 'Hospital Id must be valid').isMongoId(),
     fieldsValidator
 ], updateMedic);
 

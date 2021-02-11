@@ -43,17 +43,62 @@ const createHospital = async (req, res = response) => {
 }
 
 const updateHospital = async (req, res = response) => {
-    return res.status(200).json({
-        success: true,
-        message: 'Hospital Updated'
-    });
+    const id = req.params.id;
+    const loggedId = req.auth.uid;
+
+    try {
+
+        const hospital = await Hospital.findById(id);
+        if (!hospital) {
+            res.status(404).json({
+                success: false,
+                message: 'Hospital not found'
+            });
+        }
+
+        const toUpdate = {
+            ...req.body,
+            createdBy: loggedId
+        }
+
+        const hospitalUpdated = await Hospital.findByIdAndUpdate(id, toUpdate, { new: true });
+
+        res.status(200).json({
+            success: true,
+            hospitalUpdated
+        });
+    } catch (e) {
+        return res.status(500).json({
+            success: true,
+            message: 'Internal error'
+        });
+    }
 }
 
 const deleteHospital = async (req, res = response) => {
-    return res.status(200).json({
-        success: true,
-        message: 'Hospital Deleted'
-    });
+    const id = req.params.id;
+    try {
+
+        const hospital = await Hospital.findById(id);
+        if (!hospital) {
+            res.status(404).json({
+                success: false,
+                message: 'Hospital not found'
+            });
+        }
+
+        await Hospital.findByIdAndDelete(id);
+
+        res.status(200).json({
+            success: true,
+            message: 'Hospital deleted!'
+        });
+    } catch (e) {
+        return res.status(500).json({
+            success: true,
+            message: 'Internal error'
+        });
+    }
 }
 
 module.exports = {

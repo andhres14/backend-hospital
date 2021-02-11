@@ -89,12 +89,24 @@ const googleSignIn = async (req, res) => {
             message: 'Token not valid'
         });
     }
+}
 
+const refreshToken = async (req, res = response) => {
 
+    const uid = req.auth.uid;
+
+    // JWT
+    const token = await generateJWT(uid);
+
+    res.status(200).json({
+        success: true,
+        token
+    });
 }
 
 
 module.exports = {
     doLogin,
-    googleSignIn
+    googleSignIn,
+    refreshToken
 };
