@@ -8,7 +8,8 @@ const {
     getMedics,
     createMedic,
     updateMedic,
-    deleteMedic
+    deleteMedic,
+    getMedic
 } = require('../controllers/medics.controller');
 
 
@@ -33,5 +34,7 @@ router.put('/:id', [
 ], updateMedic);
 
 router.delete('/:id', checkJWT, deleteMedic);
+
+router.get('/:id', checkJWT, getMedic);
 
 module.exports = router;

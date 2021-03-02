@@ -19,6 +19,24 @@ const getMedics = async (req, res = response) => {
     }
 }
 
+const getMedic = async (req, res = response) => {
+    try {
+        const medic = await Medic.findById(req.params.id)
+            .populate('createdBy', 'name img')
+            .populate('hospital', 'name img');
+
+        return res.status(200).json({
+            success: true,
+            medic
+        });
+    } catch (e) {
+        return res.status(500).json({
+            success: false,
+            message: 'Internal error'
+        })
+    }
+}
+
 const createMedic = async (req, res = response) => {
     const uid = req.auth.uid;
     const medic = new Medic({
@@ -104,5 +122,6 @@ module.exports = {
     getMedics,
     createMedic,
     updateMedic,
-    deleteMedic
+    deleteMedic,
+    getMedic
 };

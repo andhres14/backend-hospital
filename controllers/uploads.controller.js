@@ -52,7 +52,8 @@ const fileUpload = async (req, res = response) => {
 
         res.status(200).json({
             success: true,
-            message: 'File uploaded!'
+            message: 'File uploaded!',
+            fileName
         });
     });
 }

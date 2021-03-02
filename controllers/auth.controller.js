@@ -64,7 +64,7 @@ const googleSignIn = async (req, res) => {
                 name,
                 email,
                 password: '1234567890',
-                image: picture,
+                img: picture,
                 google: true
             });
         } else {
@@ -92,16 +92,29 @@ const googleSignIn = async (req, res) => {
 }
 
 const refreshToken = async (req, res = response) => {
-
     const uid = req.auth.uid;
+    try {
+        const user = await User.findById(uid);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Account not found!'
+            })
+        }
+        // JWT
+        const token = await generateJWT(uid);
 
-    // JWT
-    const token = await generateJWT(uid);
-
-    res.status(200).json({
-        success: true,
-        token
-    });
+        res.status(200).json({
+            success: true,
+            token,
+            user
+        });
+    } catch (e) {
+        res.status(401).json({
+            success: false,
+            message: 'Internal error'
+        });
+    }
 }
 
 
